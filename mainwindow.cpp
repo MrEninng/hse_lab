@@ -61,6 +61,8 @@ void MainWindow::choose_file_button_clicked()
                 set_f();
                 set_middle_value();
                 set_middle_value2();
+                set_average_of_intervals();
+                set_si();
                 set_n_i();
                 set_xi_sq();
 
@@ -72,6 +74,12 @@ void MainWindow::choose_file_button_clicked()
 //                qDebug() << "END";
 
                 set_lines();
+                for (int i = 0; i < intervals.size();i++) {
+                    for (int j = 0; j < intervals[i].size();j++)
+                        qDebug() << intervals[i][j];
+                    qDebug() << "end_line";
+                }
+
               //  check_result();
 
                 is_chButton_clicked_flag = true;
@@ -151,9 +159,9 @@ void MainWindow::set_r()
         throw (std::invalid_argument("This sample is not appropriate, "
                                      "because the number of values less than 40"));
     else if (started_data.size() >= 40 && started_data.size() <= 100)
-        r = 8;
+        r = 9;
     else if (started_data.size() > 100 && started_data.size() <= 500)
-        r = 10;
+        r = 9;
     else if (started_data.size() > 500 && started_data.size() <= 1000)
         r = 15;
     else if (started_data.size() > 1000 && started_data.size() <= 10000)
@@ -181,6 +189,7 @@ void MainWindow::clear_data()
     n_i = {};
     koef = 0;
     xi = 0;
+    Si = {};
 
 
 
@@ -222,14 +231,14 @@ void MainWindow::fill_intervals()
 //    for (int i = 0; i < started_data.size();i++)
 //        qDebug() << started_data[i];
     int i = 0;
-    double interval_value = min_x + h/2.0;
+    double interval_value = min_x + h;
    // qDebug() << max_x << "KEK" << h << "kek" << min_x;
     try {
 
         //qDebug() << started_data.size();
         while (i < started_data.size() && interval_value <= max_x ) {
             QVector<double> obj;
-            while(i < started_data.size() && started_data[i] <= interval_value ) {
+            while(i < started_data.size() && started_data[i] < interval_value ) {
                 obj.push_back(started_data[i]);
                 i++;
             }
@@ -321,14 +330,13 @@ void MainWindow::set_n_i()
        // qDebug() << " middle_value2[i] " << middle_value2[i]  << "Average_data" << average_data;
 //        double x1 = 0;
 //        x1 = fabs(middle_value2[i] - average_data)
-        double x = ( (middle_value2[i] - average_data) / S); // ПО ФОРМУЛЕ АБС НЕ НУЖЕН!!
+        double x = ( (middle_value2[i] - average_data/*average_data_of_intervals[i]*/) / S /*Si[i]*/); // ПО ФОРМУЛЕ АБС НЕ НУЖЕН!!
 
-        double f = (1.0 / static_cast<double>((sqrt(2.0 * 3.141592653) ) ) ) * sqrt(exp( x * x ) );
-
-        obj = koef * f;
+        double f =sqrt(exp(-1 * x * x ) ) * (1.0 / static_cast<double>((sqrt(2.0 * 3.141592653) ) ) );
+        double koef1 = intervals[i].size() * h / Si[i];
+        obj = koef/*1*/ * f;
        // qDebug()  << " X " << x << " F " << f << "OBJ" << static_cast<int>(obj) << " I: " << i;
 
-         //obj = koef * ((middle_value[i] - /*average_data_of_intervals[i]*/average_data) / S);
         n_i.push_back(static_cast<int>(obj) );
         f = 0;
         x = 0;
@@ -341,12 +349,12 @@ void MainWindow::set_xi_sq()
 {
     double obj = 0;
     for (int i = 0; i < intervals.size(); i++) {
-       // qDebug() << intervals[i].size() << "<- количество на данном интервале  ||  предполагаемое -> " << n_i[i] << "i: " << i;
+        qDebug() << intervals[i].size() << "<- количество на данном интервале  ||  предполагаемое -> " << n_i[i] << "i: " << i;
 
         // ПРИВЕЛ К ТИПУ ИНТА Т,Е, ВЗЯЛ ЦЕЛУЮ ЧАСТЬ
         obj = ((intervals[i].size() - n_i[i] ) * (intervals[i].size() - n_i[i] )) / static_cast<double>(n_i[i]);
         xi_sq.push_back(obj);
-//        qDebug() << " xi_sq " << obj;
+        qDebug() << " xi_sq " << obj;
         obj = 0;
     }
  //   qDebug() << xi_sq.size() << " " << r << " ni" << n_i.size() << "intervals" << intervals.size();
@@ -416,5 +424,17 @@ void MainWindow::comboBox_changed()
     if (is_chButton_clicked_flag) {
         choose_quantile();
         ui->quantile_line->setText(QString::number(quantile));
+    }
+}
+
+void MainWindow::set_si()
+{
+    double obj = 0;
+    for (int i = 0; i < intervals.size();i++) {
+        for(int j = 0; j < intervals[i].size(); j++)
+            obj += (intervals[i][j] - average_data_of_intervals[i] ) * (intervals[i][j] - average_data_of_intervals[i]);
+        double obj2 = sqrt(obj/(intervals[i].size() - 1));
+        Si.push_back(obj2);
+        obj = 0;
     }
 }

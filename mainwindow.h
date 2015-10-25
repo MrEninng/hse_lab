@@ -3,10 +3,6 @@
 
 #include <QMainWindow>
 #include "qfile.h"
-struct T {
-    double begin_i;
-    double end_i;
-};
 namespace Ui {
 class MainWindow;
 }
@@ -38,8 +34,9 @@ private:
     QVector<int> n_i;//число результатов измерений, которое должно быть в данном интервале
                                     //если оно было бы нормальным
 
-    QVector<T> inter;  // структура интервалов
     QVector<double> middle_value2;
+    QVector<double> Si;
+  //  QVector<double> xi;
     const QVector<QVector<double> > quantile_table= {{0.99,    0.98,   0.95,   0.90,   0.80,   0.20,   0.10,   0.05,   0.02,   0.01,   0.001 },
                                                {0.00016, 0.00063,0.00393,0.0158, 0.0642, 1.642, 	2.706, 	3.841, 	5.412, 	6.635, 	10.827},
                                                {0.0201, 	0.0404, 0.103, 	0.211, 	0.446, 	3.219, 	4.605, 	5.991, 	7.824, 	9.210, 	13.815},
@@ -109,6 +106,7 @@ private:
     void set_xi_sq();
     void choose_quantile();
     void check_result();
+    void set_si();
 
 
     void clear_data();

@@ -6,8 +6,6 @@
 #include <QDebug>
 #include <cmath>
 #include <algorithm>
-#include "intervalstable.h"
-
 
 QString changeOnDoTA(QString exmpl);
 
@@ -295,29 +293,29 @@ void MainWindow::info_button_clicked()
 }
 
 
-void MainWindow::intervals_button_clicked()
-{
-    if (is_chButton_clicked_flag){
-        IntervalsTable i;
-        i.setFixedSize(i.size());
-        i.show();
-    } else {
-        QMessageBox::critical(this,"No values!", "Choose correct file with values");
-    }
-}
+//void MainWindow::intervals_button_clicked()
+//{
+//    if (is_chButton_clicked_flag){
+//        IntervalsTable i;
+//        i.setFixedSize(i.size());
+//        i.show();
+//    } else {
+//        QMessageBox::critical(this,"No values!", "Choose correct file with values");
+//    }
+//}
 
 //БЕСПОЛЕЗНАЯ ФУНКЦИЯ!
-void MainWindow::set_average_of_intervals()
-{
-    double obj = 0;
-    for (int i = 0; i < intervals.size(); i++) {
-        for (int j = 0; j < intervals[i].size(); j++)
-            obj +=intervals[i][j];
-        obj = obj / static_cast<double>(intervals[i].size());
-        average_data_of_intervals.push_back(obj);
-        obj = 0;
-    }
-}
+//void MainWindow::set_average_of_intervals()
+//{
+//    double obj = 0;
+//    for (int i = 0; i < intervals.size(); i++) {
+//        for (int j = 0; j < intervals[i].size(); j++)
+//            obj +=intervals[i][j];
+//        obj = obj / static_cast<double>(intervals[i].size());
+//        average_data_of_intervals.push_back(obj);
+//        obj = 0;
+//    }
+//}
 
 void MainWindow::set_n_i()
 {

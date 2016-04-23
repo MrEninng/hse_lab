@@ -13,12 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    intervalstable.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    intervalstable.h
+HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui \
-    intervalstable.ui
+FORMS    += mainwindow.ui
 CONFIG   += c++11
